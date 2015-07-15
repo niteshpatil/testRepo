@@ -1,0 +1,17 @@
+<ion-nav-bar>
+  <ion-nav-back-button class="button-clear">
+    <i class="ion-arrow-left-c"></i> Back
+  </ion-nav-back-button>
+</ion-nav-bar>
+
+<ion-view view-title="Add Doctor" name="add-doctor">
+
+    <ion-content class="padding">
+        <div class="list list-inset">
+            <label class="item item-input">
+                <input type="text" placeholder="Search Doctor" ng-model="doctor">
+            </label>
+            <button class="button button-block button-calm" ng-click="searchDoctor(doctor)">Search</button>
+        </div>
+    </ion-content>
+</ion-view>

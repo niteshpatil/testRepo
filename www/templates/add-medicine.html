@@ -1,0 +1,89 @@
+<!-- <ion-view view-title="Add Medicines" name="add-medicine">
+    <ion-nav-bar>
+        <ion-nav-back-button class="button-clear">
+            <i class="ion-arrow-left-c"></i> Back
+        </ion-nav-back-button>
+    </ion-nav-bar>
+    <ion-content class="padding">
+        <h1>Medicines</h1>
+    </ion-content> href="#/app/tabs/medicines"
+</ion-view> -->
+
+<ion-view title="My Medicines" left-buttons="leftButtons">
+    <ion-nav-buttons side="left">
+        <a class="button button-positive" ui-sref="app.tabs.medicines">
+            Back
+        </a>
+    </ion-nav-buttons>
+    <ion-content has-header="true" padding="true">
+        <div class="list">
+            <label class="item item-input">
+                <span class="input-label">Medicine Name</span>
+                <input type="text" ng-model="data.medicine">
+            </label>
+            <h2>Dosage</h2>
+			
+            <medicine-time time="morning" callback="medicineAdd(value,time)"></medicine-time>
+            <medicine-time time="afternoon" callback="medicineAdd(value,time)"></medicine-time>
+            <medicine-time time="evening" callback="medicineAdd(value,time)"></medicine-time>
+            <medicine-time time="night" callback="medicineAdd(value,time)"></medicine-time>
+
+            <label class="item item-input item-select">
+                <div class="input-label">
+                    Starting
+                </div>
+                <select ng-init="data.startDate = 0" ng-model="data.startDate">
+                    <option value="0" selected ng-selected="true">Today</option>
+                    <option value="1">Tommorrrow</option>
+                    <option value="2">After 2 Days</option>
+                    <option value="3">After 3 Days</option>
+                    <option value="4">After 4 Days</option>
+                    <option value="5">After 5 Days</option>
+                    <option value="6">After 6 Days</option>
+                </select>
+            </label>
+
+            <div class="item item-input">
+                <div class="input-label">
+                    <select ng-init="data.frequency = 1" ng-model="data.frequency">
+                        <option value="0" ng-selected="true">EveryDay</option>
+                        <option value="1">Every 2 days</option>
+                        <option value="2">Every 3 days</option>
+                        <option value="3">Every 4 days</option>
+                        <option value="4">Every 5 days</option>
+                        <option value="5">Every 6 days</option>
+                        <option value="6">Every week</option>
+
+                    </select>
+                </div>
+                <div class="input-label">
+                    For
+                </div>
+                <div class="input-label">
+                    <select ng-init="data.duration = 1" ng-model="data.duration">
+                        <option value="1" ng-selected="true">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+
+                    </select>
+                </div>
+                <div class="input-label">
+                    Cycle
+                </div>
+
+            </div>
+            <div class="item item-checkbox">
+                <label class="checkbox">
+                    <input type="checkbox" ng-init="data.medhistory = false" ng-model="data.medhistory">
+                </label>
+                Add these to My Medical History
+            </div>
+
+        </div>
+        <button class="button button-block button-calm" ng-click="addMedicine()">Add to My medicines</button>
+    </ion-content>
+</ion-view>
