@@ -161,10 +161,10 @@ angular.module('starter.controllers', ['firebase'])
         authData = firebaseRef.getAuth(),
         doctorsData = null,
         medicineList = {
-            m : {},
-            a : {},
-            e : {},
-            n : {}
+            m: {},
+            a: {},
+            e: {},
+            n: {}
         };
 
     var userRef = firebaseRef.child("patients").child(authData.uid);
@@ -176,27 +176,31 @@ angular.module('starter.controllers', ['firebase'])
     userRef.child('visits').startAt(todayTimeStamp).on("value", function(snapshot) {
         $scope.arrMedicines = [];
         var medicines = snapshot.val();
-        for (var key in medicines) { 
-            var med =  medicines[key];
+        for (var key in medicines) {
+            var med = medicines[key];
             var startDate = med.startDate;
             var cycle = med.duration;
             var frequency = med.frequency;
             var medDate = null;
-            
-            for(i=0;i<cycle;i++)
-            {
-                medDate = $TimeService.getFutureDate(startDate , frequency);
+
+            for (i = 0; i < cycle; i++) {
+                if (i == 0) {
+                    medDate = startDate
+                } else {
+                    medDate = $TimeService.getFutureDate(startDate, frequency);
+                    frequency += med.frequency;
+                }
 
                 $scope.arrMedicines.push({
                     name: med.name,
-                    morning : med.dosage.morning,
-                    afternoon : med.dosage.afternoon,
-                    evening : med.dosage.evening,
-                    night : med.dosage.night,
-                    medDate : $TimeService.getDateFromTimeStamp(medDate)
+                    morning: med.dosage.morning,
+                    afternoon: med.dosage.afternoon,
+                    evening: med.dosage.evening,
+                    night: med.dosage.night,
+                    medDate: $TimeService.getDateFromTimeStamp(medDate)
                 })
 
-                frequency+=frequency;
+
             }
         }
         $scope.$apply();
@@ -251,23 +255,23 @@ angular.module('starter.controllers', ['firebase'])
 
         var medData = $scope.data,
             medName = medData.medicine,
-            startingFrom =  parseInt(medData.startDate),
+            startingFrom = parseInt(medData.startDate),
             startDate = $TimeService.getFutureDateFromToday(startingFrom),
             frequency = parseInt(medData.frequency),
             duration = parseInt(medData.duration),
-            endDate = $TimeService.getFutureDateFromToday((startingFrom + frequency) * duration), 
+            endDate = $TimeService.getFutureDateFromToday((startingFrom + frequency) * duration),
             endDateTimeStamp = $TimeService.getTimeStampFromDate(endDate),
             bAddTohistory = medData.medhistory;
 
-        
+
         userRef.child('visits').push({
             name: medName,
             startDate: $TimeService.getTimeStampFromDate(startDate),
             frequency: frequency,
-            dosage:medicineTimes,
-            duration:duration,
-            endDate:endDateTimeStamp,
-            addToHistory:bAddTohistory
+            dosage: medicineTimes,
+            duration: duration,
+            endDate: endDateTimeStamp,
+            addToHistory: bAddTohistory
         }).setPriority(endDateTimeStamp);
 
     }

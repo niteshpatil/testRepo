@@ -56,7 +56,7 @@ angular.module('starter.controllers')
 
                             $scope.fractionDosage = function() {
                                 $scope.$parent.increment = ($scope.$parent.increment == 0.5) ? 1 : 0.5;
-                                $scope.value += increment;
+                                $scope.value += $scope.$parent.increment;
 
                                 $scope.callback({
                                     value: $scope.value,
