@@ -26,8 +26,9 @@ angular.module('starter.controllers')
             controller: function($scope, $element, $attrs, $ionicPopover) {
                 $scope.value = $scope.data || 0;
                 $scope.time = $attrs.time;
+                var nWidetCount = document.querySelectorAll('.medicineCount').length == 4;  //TODO : find better solution
                 if ($scope.dose) {
-                    $scope.openWidget = ($scope.dose == $scope.time) ? false : true;
+                    $scope.openWidget = ($scope.dose == $scope.time  && nWidetCount) ? false : true;
                 }
                 $scope.add = function() {
                     if($scope.readonly) {
@@ -74,7 +75,7 @@ angular.module('starter.controllers')
                                 popover.hide();
                             }
 
-                            $scope.asNeeded = function() {
+                            $scope.asNeeded = function() {  //TODO : find better solution
                                 var elements = document.querySelectorAll('.medicineCount'),
                                     elementScope = [];
 

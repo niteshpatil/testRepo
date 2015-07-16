@@ -16,8 +16,8 @@
                     {{ key }}
                 </div>
             </div>
-            <a ng-repeat="medicine in value | unique: 'name'" class="item item-icon-left">
-                <div>Medicine : {{medicine.name}}</div>
+            <a ng-repeat="medicine in value | unique: 'name'" class="item item-icon-left medicineList">
+                <div>{{medicine.name}}</div>
                 <medicine-time time="morning" callback="medicineAdd(value,time)" class="closed" data="medicine.morning" dose="medicine.dose" readonly="true"></medicine-time>
                 <medicine-time time="afternoon" callback="medicineAdd(value,time)" class="closed" data="medicine.afternoon" dose="medicine.dose" readonly="true"></medicine-time>
                 <medicine-time time="evening" callback="medicineAdd(value,time)" class="closed" data="medicine.evening" dose="medicine.dose" readonly="true"></medicine-time>
