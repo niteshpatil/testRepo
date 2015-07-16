@@ -274,6 +274,7 @@ angular.module('starter.controllers', ['firebase'])
             addToHistory: bAddTohistory
         }).setPriority(endDateTimeStamp);
 
+        console.log('added')
     }
 
 
