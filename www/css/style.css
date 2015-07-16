@@ -45,25 +45,29 @@ input.sex-radio-button:after {
     left: 15%;
 }
 
-.custom-toggle.morning .handle{
+/*.custom-toggle.morning .handle{
   background-color: yellow;
   border: 1px solid black;
+}*/
+
+
+.custom-toggle.morning .track, .custom-toggle.morning .track.closed .handle {
+  border-color: #ffc900;
+  background-color: #ffc900;
+}
+.custom-toggle.afternoon .track, .custom-toggle.afternoon .track.closed .handle {
+  border-color: #DF5C52;
+  background-color: #DF5C52;
+}
+.custom-toggle.evening .track, .custom-toggle.evening .track.closed .handle {
+  border-color: #4DC0C0;
+  background-color: #4DC0C0;
+}
+.custom-toggle.night .track, .custom-toggle.night .track.closed .handle {
+  border-color: #735D9B;
+  background-color: #735D9B;
 }
 
-.custom-toggle.afternoon .handle{
-  background-color: red;
-  border: 1px solid black;
-}
-
-.custom-toggle.evening .handle{
-  background-color: blue;
-  border: 1px solid black;
-}
-
-.custom-toggle.night .handle{
-  background-color: purple;
-  border: 1px solid black;
-}
 
 .custom-toggle .medicineCount{
     position: absolute;
@@ -74,4 +78,8 @@ input.sex-radio-button:after {
 
 .custom-toggle .track {
   width: 65px;
+}
+
+.custom-toggle .track.closed {
+  width: 32px;
 }

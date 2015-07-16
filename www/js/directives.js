@@ -8,22 +8,31 @@ angular.module('starter.controllers')
             replace: true,
             scope: {
                 time: '=',
-                callback: "&"
+                callback: "&",
+                data: "=",
+                dose: "=",
+                readonly : "="
             },
             transclude: false,
             //template: '<label class="toggle toggle-positive custom-toggle"><div class="track"><div class="handle"></div></div></label>',
             template: function(element, attrs) {
+                var className = attrs.class;
                 var arrMedicineTime = ['<label on-hold="popit($event)"  ng-click="add()" class="medicine-widget toggle toggle-positive custom-toggle ' + attrs.time + '">'];
-                arrMedicineTime.push('<div class="track"><div class="handle"></div>');
+                arrMedicineTime.push('<div class="track" ng-class="{closed : openWidget}"><div class="handle"></div>');
                 arrMedicineTime.push('<div class="medicineCount">{{value}}</div></div></label>');
                 return arrMedicineTime.join('');
             },
 
             controller: function($scope, $element, $attrs, $ionicPopover) {
-                $scope.value = 0;
+                $scope.value = $scope.data || 0;
                 $scope.time = $attrs.time;
-
+                if ($scope.dose) {
+                    $scope.openWidget = ($scope.dose == $scope.time) ? false : true;
+                }
                 $scope.add = function() {
+                    if($scope.readonly) {
+                        return false;
+                    }
                     $scope.value += $scope.$parent.increment;
                     $scope.callback({
                         value: $scope.value,
