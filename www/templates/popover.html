@@ -1,18 +1,24 @@
-<ion-popover-view>
+<ion-popover-view class="my-med-popover">
     <ion-content>
-                <div class="list">
-                    <a class="item" ng-click="asNeeded()">
+        <div class="list">
+            <a class="item" ng-click="asNeeded()">
               As Needed
             </a>
-                    <a class="item" ng-click="popupReset()">
+            <a class="item" ng-click="popupReset()">
               Reset
             </a>
-                    <a class="item" href="http://showcase.ionicframework.com/" target="_blank">
+            <a class="item" ng-click="beforeMeal()">
               Before Meal
             </a>
-                    <a class="item" ng-click="fractionDosage()">
-              Fractional Dosage
+            <a class="item" ng-click="afterMeal()">
+              After Meal
             </a>
-                </div>
+            <a class="item" ng-click="withMilk()">
+              With Milk
+            </a>
+            <a class="item item-icon-right" ng-click="fractionDosage()">
+                <i class="icon" ng-class="bFractionDose && 'ion-android-checkbox-outline' || 'ion-android-checkbox-outline-blank'"></i> Fractional Dosage
+            </a>
+        </div>
     </ion-content>
 </ion-popover-view>

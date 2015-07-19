@@ -11,27 +11,30 @@ angular.module('starter.controllers')
                 callback: "&",
                 data: "=",
                 dose: "=",
-                readonly : "="
+                readonly: "="
             },
             transclude: false,
             //template: '<label class="toggle toggle-positive custom-toggle"><div class="track"><div class="handle"></div></div></label>',
             template: function(element, attrs) {
                 var className = attrs.class;
-                var arrMedicineTime = ['<label on-hold="popit($event)"  ng-click="add()" class="medicine-widget toggle toggle-positive custom-toggle ' + attrs.time + '">'];
-                arrMedicineTime.push('<div class="track" ng-class="{closed : openWidget}"><div class="handle"></div>');
+                var arrMedicineTime = ['<label ng-class="{openWidget : openWidget}" on-hold="popit($event)"  ng-click="add()" class="medicine-widget toggle toggle-positive custom-toggle ' + attrs.time + '">'];
+                arrMedicineTime.push('<div class="track" ng-class="{open : openWidget}"><div class="handle"></div>');
                 arrMedicineTime.push('<div class="medicineCount">{{value}}</div></div></label>');
                 return arrMedicineTime.join('');
             },
 
             controller: function($scope, $element, $attrs, $ionicPopover) {
                 $scope.value = $scope.data || 0;
+
                 $scope.time = $attrs.time;
-                var nWidetCount = document.querySelectorAll('.medicineCount').length == 4;  //TODO : find better solution
+                var nWidetCount = document.querySelectorAll('.medicineCount').length == 4; //TODO : find better solution
+
                 if ($scope.dose) {
-                    $scope.openWidget = ($scope.dose == $scope.time  && nWidetCount) ? false : true;
+                    $scope.openWidget = ($scope.dose == $scope.time) ? true : false;
                 }
+
                 $scope.add = function() {
-                    if($scope.readonly) {
+                    if ($scope.readonly) {
                         return false;
                     }
                     $scope.value += $scope.$parent.increment;
@@ -41,7 +44,13 @@ angular.module('starter.controllers')
                     });
                 }
 
+
+                $scope.bFractionDose = false;
+
                 $scope.popit = function($event) {
+                    if ($scope.readonly) {
+                        return false;
+                    }
                     $ionicPopover.fromTemplateUrl('templates/popover.html', {
                             scope: $scope
                         })
@@ -55,48 +64,46 @@ angular.module('starter.controllers')
                             });
 
                             $scope.popupReset = function() {
-                                //medicineTimes[$event.gesture.target.getAttribute('time')] = 0;
-                                $scope.value = 0;
-                                $scope.callback({
-                                    value: $scope.value,
-                                    time: $scope.time
-                                });
+                                $scope.$parent.resetValues();
                                 popover.hide();
                             }
 
                             $scope.fractionDosage = function() {
-                                $scope.$parent.increment = ($scope.$parent.increment == 0.5) ? 1 : 0.5;
-                                $scope.value += $scope.$parent.increment;
+                                var bIncrement = true,
+                                    bRound = false,
+                                    incrementVal = 0;
+                                if ($scope.$parent.increment == 0.5) {
+                                    $scope.$parent.increment = 1;
+                                    $scope.bFractionDose = false;
+                                    incrementVal = 0;
+                                    bRound = true;
+                                } else {
+                                    $scope.$parent.increment = 0.5;
+                                    incrementVal = 0.5;
+                                    $scope.bFractionDose = true;
+                                }
 
-                                $scope.callback({
-                                    value: $scope.value,
-                                    time: $scope.time
-                                });
+                                $scope.$parent.resetValues(incrementVal, bIncrement, bRound);
                                 popover.hide();
                             }
 
-                            $scope.asNeeded = function() {  //TODO : find better solution
-                                var elements = document.querySelectorAll('.medicineCount'),
-                                    elementScope = [];
+                            $scope.asNeeded = function() { //TODO : find better solution
 
-                                for (var i = 0; i < elements.length; i++) {
-                                    var newScope = null;
-                                    newScope = angular.element(elements[i]).scope();
-
-                                    doSetTimeout(newScope)
-
-
-                                }
-
-                                function doSetTimeout(newScope) {
-                                    setTimeout(function() {
-                                        $scope.$apply(function() {
-                                            newScope.value = 0;
-                                        });
-                                    }, 100)
-                                }
 
                                 popover.hide();
+                            }
+
+                            $scope.beforeMeal = function() {
+                                $scope.$parent.setMedDirection("Before Meal");
+                                popover.hide();
+                            }
+                            $scope.afterMeal = function() {
+                                $scope.$parent.setMedDirection("After Meal");
+                               popover.hide();
+                            }
+                            $scope.withMilk = function() {
+                               $scope.$parent.setMedDirection("With Milk");
+                               popover.hide();
                             }
 
                             $scope.$on('popover.hidden', function() {

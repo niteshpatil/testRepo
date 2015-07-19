@@ -22,13 +22,15 @@
                 <input type="text" ng-model="data.medicine">
             </label>
             <h2>Dosage</h2>
-			
-            <medicine-time time="morning" callback="medicineAdd(value,time)"></medicine-time>
-            <medicine-time time="afternoon" callback="medicineAdd(value,time)"></medicine-time>
-            <medicine-time time="evening" callback="medicineAdd(value,time)"></medicine-time>
-            <medicine-time time="night" callback="medicineAdd(value,time)"></medicine-time>
 
-            <label class="item item-input item-select">
+            <div class="item dosage-wrap">
+                <medicine-time time="morning" callback="medicineAdd(value,time)" data="data.dosage.morning" ng-model="data.dosage.morning"></medicine-time>
+                <medicine-time time="afternoon" callback="medicineAdd(value,time)" data="data.dosage.afternoon"></medicine-time>
+                <medicine-time time="evening" callback="medicineAdd(value,time)" data="data.dosage.evening"></medicine-time>
+                <medicine-time time="night" callback="medicineAdd(value,time)" data="data.dosage.night"></medicine-time>
+            </div>
+
+            <label class="item item-input item-select hidden">
                 <div class="input-label">
                     Starting
                 </div>
@@ -46,13 +48,13 @@
             <div class="item item-input">
                 <div class="input-label">
                     <select ng-init="data.frequency = 1" ng-model="data.frequency">
-                        <option value="0" ng-selected="true">EveryDay</option>
-                        <option value="1">Every 2 days</option>
-                        <option value="2">Every 3 days</option>
-                        <option value="3">Every 4 days</option>
-                        <option value="4">Every 5 days</option>
-                        <option value="5">Every 6 days</option>
-                        <option value="6">Every week</option>
+                        <option value="1" ng-selected="true">EveryDay</option>
+                        <option value="2">Every 2 days</option>
+                        <option value="3">Every 3 days</option>
+                        <option value="4">Every 4 days</option>
+                        <option value="5">Every 5 days</option>
+                        <option value="6">Every 6 days</option>
+                        <option value="7">Every week</option>
 
                     </select>
                 </div>
@@ -76,12 +78,12 @@
                 </div>
 
             </div>
-            <div class="item item-checkbox">
+            <!--  <div class="item item-checkbox">
                 <label class="checkbox">
                     <input type="checkbox" ng-init="data.medhistory = false" ng-model="data.medhistory">
                 </label>
                 Add these to My Medical History
-            </div>
+            </div> -->
 
         </div>
         <button class="button button-block button-calm" ng-click="addMedicine()">Add to My medicines</button>

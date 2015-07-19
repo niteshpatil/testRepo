@@ -6,18 +6,22 @@
                 {{message.date}}
             </ion-item>
         </ion-list> -->
-        <a class="button button-assertive" href="#/add-medicine">
-            Add
+        <a class="item item-icon-left add-med-button" href="#/add-medicine">
+        <i class="icon ion-ios-plus-outline"></i>
+            <h2> Add Medicines</h2>
+            <div class="add-me-info">Personally add medicines for timely remonders if you are not yet connected to your doctor, view them in your timeline</div>
         </a>
-
-        <div ng-repeat="(key, value) in arrMedicines | groupBy: 'medDate'">
-            <div class="card">
-                <div class="item item-text-wrap">
-                    {{ key }}
+        
+        <div>
+        <div ng-repeat="(key, value) in arrMedicines | groupBy: 'medDate'" class="myMedicineWrapper">
+            <div>
+                <div class="item item-text-wrap med-dates">
+                    <i class="icon ion-calendar"></i> {{ getDateFromat(key) }}
                 </div>
             </div>
             <a ng-repeat="medicine in value | unique: 'name'" class="item item-icon-left medicineList">
                 <div>{{medicine.name}}</div>
+                <div class="med-directions">{{medicine.medDirection}}</div>
                 <medicine-time time="morning" callback="medicineAdd(value,time)" class="closed" data="medicine.morning" dose="medicine.dose" readonly="true"></medicine-time>
                 <medicine-time time="afternoon" callback="medicineAdd(value,time)" class="closed" data="medicine.afternoon" dose="medicine.dose" readonly="true"></medicine-time>
                 <medicine-time time="evening" callback="medicineAdd(value,time)" class="closed" data="medicine.evening" dose="medicine.dose" readonly="true"></medicine-time>
@@ -29,6 +33,7 @@
                 <div>Night Dosage : {{medicine.night}} </div> -->
             </a>
             <br>
+        </div>
         </div>
         <!-- <div class="list">
             <a class="item item-icon-left" href="#" ng-repeat="message in arrMedicines">

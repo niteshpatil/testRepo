@@ -43,9 +43,19 @@ angular.module('starter.services', [])
             return new Date(date).getTime();
         },
 
-        getDateFromTimeStamp: function(timeStamp) {
-            var date = new Date(timeStamp);
-            return (date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear());
+        getDateFromTimeStamp: function(timeStamp, format) {
+            var date = new Date(timeStamp),
+                dateFormat = format || 'ddmmyy';
+            
+            switch (dateFormat){
+                case 'ddmmyy' :
+                    return (date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear());
+
+                case 'mmddyy' :
+                    return ((date.getMonth() + 1) + '/' + date.getDate()  + '/' + date.getFullYear());
+
+            }
+            
         },
 
         getFutureDateFromToday:function(offset){ 

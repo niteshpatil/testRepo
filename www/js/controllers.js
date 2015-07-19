@@ -1,6 +1,12 @@
 angular.module('starter.controllers', ['firebase', 'angular.filter'])
 
-.controller('RegisterCtrl', function($scope, $state) {
+.controller('RegisterCtrl', function($scope, $state, fireBaseData) {
+    var firebaseRef = fireBaseData.ref(),
+        authData = firebaseRef.getAuth();
+
+    // if (authData) {
+    //     $state.go('app.tabs.medicines');
+    // }
 
     $scope.signInPage = function() {
         $state.go('login');
@@ -55,9 +61,8 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
     firebaseRef.onAuth(function(authData) {
         if (authData) {
 
-            console.log('hahaha')
-                // save the user's profile into Firebase so we can list users,
-                // use them in Security and Firebase Rules, and show profiles
+            // save the user's profile into Firebase so we can list users,
+            // use them in Security and Firebase Rules, and show profiles
             firebaseRef.child("users").child(authData.uid).set({
                 type: "patient"
             });
@@ -170,6 +175,10 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
         };
 
     var userRef = firebaseRef.child("patients").child(authData.uid);
+    $scope.getDateFromat = function(timeStamp) {
+        var date = new Date(parseInt(timeStamp));
+        return date.toDateString(); //(date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear());
+    }
 
     $scope.prescriptions = [];
 
@@ -201,6 +210,7 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
             var dosage = med.dosage;
             var medDate = null;
             var dose = null;
+            var medDirection = med.medDirection;
 
             for (i = 0; i < cycle; i++) {
                 if (i == 0) {
@@ -226,8 +236,9 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
                             afternoon: med.dosage.afternoon,
                             evening: med.dosage.evening,
                             night: med.dosage.night,
-                            medDate: $TimeService.getDateFromTimeStamp(medDate),
-                            dose:dose
+                            medDate: new Date(medDate).setHours(0, 0, 0, 0),
+                            dose: dose,
+                            medDirection: med.medDirection
                         });
 
                     }
@@ -249,6 +260,11 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
 
         }
 
+        // for(var i =0 ; i<sortedMeds.length;i++) {
+        //     if (sortedMeds[i].date > curTime) {
+        //         $scope.arrMedicines.push(sortedMeds[i]);
+        //     }
+        // }
 
         // medDates.forEach(function(med) {
         //     $scope.arrMedicines.push(unsortedMeds[med]);
@@ -283,11 +299,22 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
         }
 
     $scope.data = {};
-    $scope.times = medicineTimes;
+    $scope.data.dosage = medicineTimes;
     $scope.increment = 1;
+    $scope.medDirection = "After Meal";
 
     $scope.medicineAdd = function(val, time) {
-        $scope.times[time] = val;
+        $scope.data.dosage[time] = val;
+    }
+
+    $scope.setMedDirection = function(directions) {
+
+        setTimeout(function() {
+            $scope.$apply(function() {
+                $scope.medDirection = directions;
+
+            });
+        }, 100);
     }
 
     $scope.addMedicine = function() {
@@ -299,23 +326,70 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
             frequency = parseInt(medData.frequency),
             duration = parseInt(medData.duration),
             endDate = $TimeService.getFutureDateFromToday((startingFrom + frequency) * duration),
-            endDateTimeStamp = $TimeService.getTimeStampFromDate(endDate),
-            bAddTohistory = medData.medhistory;
+            endDateTimeStamp = $TimeService.getTimeStampFromDate(endDate);
+        //  bAddTohistory = medData.medhistory;
 
 
         userRef.child('visits').push({
             name: medName,
             startDate: $TimeService.getTimeStampFromDate(startDate),
             frequency: frequency,
-            dosage: medicineTimes,
+            dosage: $scope.data.dosage,
             duration: duration,
             endDate: endDateTimeStamp,
-            addToHistory: bAddTohistory
+            medDirection: $scope.medDirection
+                //   addToHistory: bAddTohistory
+        }, function() {
+            $state.go('app.tabs.medicines');
         }).setPriority(endDateTimeStamp);
 
-        console.log('added')
+
+        $scope.data = {
+            dosage: {
+                morning: 0,
+                afternoon: 0,
+                evening: 0,
+                night: 0
+            },
+            duration: 1,
+            startDate: 0,
+            frequency: 1
+        };
+
+        $scope.resetValues();
     }
 
+
+    $scope.resetValues = function(value, bIncrement, bRound) {
+        var elements = document.querySelectorAll('.medicineCount'),
+            elementScope = [],
+            val = value || 0;
+
+        for (var i = 0; i < elements.length; i++) {
+            var newScope = null;
+            newScope = angular.element(elements[i]).scope();
+
+            doSetTimeout(newScope)
+
+
+        }
+
+        function doSetTimeout(newScope) {
+            setTimeout(function() {
+                $scope.$apply(function() {
+                    newScope.value = (bIncrement) ? (newScope.value + val) : val;
+                    if (bRound == true) {
+                        newScope.value = Math.floor(newScope.value);
+                    }
+                    $scope.medicineAdd({
+                        value: newScope.value,
+                        time: newScope.time
+                    });
+
+                });
+            }, 100)
+        }
+    }
 
 
 

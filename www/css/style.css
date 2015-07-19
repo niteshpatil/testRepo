@@ -1,42 +1,71 @@
 /* Empty. Add your own CSS if you like */
 
-
+.pane {
+  background-color: #f8f3ef;
+}
 #register-screen.pane {
     background: url('../img/register.jpg') no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     background-size: cover;
 }
-
 #register-screen .scroll {
     height: 100%;
 }
-
 .register-screen-wrap {
     position: relative;
     height: 100%;
 }
-
 #register-links {
     position: absolute;
     bottom: 80px;
     width: 100%;
 }
-/*.scroll-content {
-  display: table !important;
-  width: 100% !important;
-  height: 100% !important;
-}
-.scroll {
-  display: table-cell;
-  vertical-align: middle;
-  text-align: center;
-}*/
 .float-left {
     float: left !important;
 }
 .float-right {
     float: right !important;
+}
+.hidden {
+    display: none;
+}
+.meditach-theme {
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#e35e4d+0,e39253+100 */
+    
+    background: #e35e4d;
+    /* Old browsers */
+    
+    background: -moz-linear-gradient(left, #e35e4d 0%, #e39253 100%);
+    /* FF3.6+ */
+    
+    background: -webkit-gradient(linear, left top, right top, color-stop(0%, #e35e4d), color-stop(100%, #e39253));
+    /* Chrome,Safari4+ */
+    
+    background: -webkit-linear-gradient(left, #e35e4d 0%, #e39253 100%);
+    /* Chrome10+,Safari5.1+ */
+    
+    background: -o-linear-gradient(left, #e35e4d 0%, #e39253 100%);
+    /* Opera 11.10+ */
+    
+    background: -ms-linear-gradient(left, #e35e4d 0%, #e39253 100%);
+    /* IE10+ */
+    
+    background: linear-gradient(to right, #e35e4d 0%, #e39253 100%);
+    /* W3C */
+    
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#e35e4d', endColorstr='#e39253', GradientType=1);
+    /* IE6-9 */
+    
+    border-none;
+    color: #fff;
+}
+.tabs-meditach > .tabs {
+    background-color: #fff;
+    color: #333;
+}
+.meditach-theme .button-clear {
+    color: #fff;
 }
 .item-input input[type="checkbox"].sex-radio-button {
     width: 50px;
@@ -44,42 +73,95 @@
 input.sex-radio-button:after {
     left: 15%;
 }
-
-/*.custom-toggle.morning .handle{
-  background-color: yellow;
-  border: 1px solid black;
-}*/
-
-
-.custom-toggle.morning .track, .custom-toggle.morning .track.closed .handle {
-  border-color: #ffc900;
-  background-color: #ffc900;
+.my-med-popover.popover .item {
+    padding: 10px;
 }
-.custom-toggle.afternoon .track, .custom-toggle.afternoon .track.closed .handle {
-  border-color: #DF5C52;
-  background-color: #DF5C52;
+.custom-toggle.morning .track, .custom-toggle.morning.closed .track .handle {
+    border-color: #D7B331;
+    background-color: #D7B331;
 }
-.custom-toggle.evening .track, .custom-toggle.evening .track.closed .handle {
-  border-color: #4DC0C0;
-  background-color: #4DC0C0;
+.custom-toggle.afternoon .track, .custom-toggle.afternoon.closed .track .handle {
+    border-color: #DF5C52;
+    background-color: #DF5C52;
 }
-.custom-toggle.night .track, .custom-toggle.night .track.closed .handle {
-  border-color: #735D9B;
-  background-color: #735D9B;
+.custom-toggle.evening .track, .custom-toggle.evening.closed .track .handle {
+    border-color: #4DC0C0;
+    background-color: #4DC0C0;
 }
-
-
-.custom-toggle .medicineCount{
+.custom-toggle.night .track, .custom-toggle.night.closed .track .handle {
+    border-color: #735D9B;
+    background-color: #735D9B;
+}
+.custom-toggle .medicineCount {
     position: absolute;
-  right: 16px;
-  top: 10px;
+    right: 16px;
+    top: 10px;
+    color: #fff;
 }
-
-
 .custom-toggle .track {
-  width: 65px;
+    width: 58px;
+}
+.custom-toggle.closed .track {
+    width: 32px;
+}
+.myMedicineWrapper .item-icon-left {
+    padding: 10px;
+}
+.medicine-widget {
+    margin: 5px 0px 0px 0px;
+}
+.medicine-widget:not(:last-child):after {
+    position: absolute;
+    bottom: 20%;
+    left: 83%;
+    height: 1px;
+    background: #111;
+    content: '';
+    top: 20px;
+    width: 27px;
+}
+.myMedicineWrapper:first-child .medicine-widget.openWidget:not(:last-child):after {
+    left: 92%;
+}
+.myMedicineWrapper:first-child .custom-toggle .track.open {
+    width: 65px;
+}
+a.add-med-button {
+    white-space: normal;
+    border: 1px dotted;
+}
+a.add-med-button h2 {
+    font-weight: bold;
+}
+a.add-med-button .ion-ios-plus-outline:before {
+    font-weight: bold;
+}
+a.add-med-button .add-me-info {
+    font-size: 10px;
+}
+.myMedicineWrapper .med-dates {
+    margin-top: 10px;
+    border: none;
+    padding: 10px;
 }
 
-.custom-toggle .track.closed {
-  width: 32px;
+a.medicineList {
+  background-color: #fff;
+  margin-bottom: 5px;
+}
+
+.item.dosage-wrap {
+  padding: 10px;
+}
+
+.dosage-wrap .medicine-widget:not(:last-child):after {
+  left: 62px;
+  width: 15px;
+}
+
+.med-directions {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 10px;
 }
