@@ -75,11 +75,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         }
     })
 
-    .state('app.browse', {
-            url: "/browse",
+    .state('app.med-detail', {
+            url: "/med-detail:prescriptionid/:medicineid",
             views: {
                 'menuContent': {
-                    templateUrl: "templates/browse.html"
+                    templateUrl: "templates/medicine-detail.html",
+                    controller: 'medDetailsController'
                 }
             }
         })

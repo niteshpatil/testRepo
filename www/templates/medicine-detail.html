@@ -1,0 +1,19 @@
+<ion-view title="Medicine Detail">
+
+    <ion-content class="has-header">
+        <div class="item item-button-right">
+            {{medicine}}
+            <button class="button" ng-click="deleteMedicine()">
+                <i class="icon ion-trash-a"></i>
+            </button>
+        </div>
+
+        <div>
+            <medicine-time time="morning"  data="dose.morning" readonly="true"></medicine-time>
+            <medicine-time time="afternoon"  data="dose.afternoon" readonly="true"></medicine-time>
+            <medicine-time time="evening"  data="dose.evening" readonly="true"></medicine-time>
+            <medicine-time time="night"  data="dose.night" readonly="true"></medicine-time>
+        </div>
+
+    </ion-content>
+</ion-view>

@@ -19,7 +19,7 @@
                     <i class="icon ion-calendar"></i> {{ getDateFromat(key) }}
                 </div>
             </div>
-            <a ng-repeat="medicine in value | unique: 'name'" class="item item-icon-left medicineList">
+            <a ng-repeat="medicine in value | unique: 'name'" class="item item-icon-left medicineList" ui-sref='app.med-detail({prescriptionid: medicine.prescriptionId,medicineid:medicine.medicineId})'>
                 <div>{{medicine.name}}</div>
                 <div class="med-directions">{{medicine.medDirection}}</div>
                 <medicine-time time="morning" callback="medicineAdd(value,time)" class="closed" data="medicine.morning" dose="medicine.dose" readonly="true"></medicine-time>
