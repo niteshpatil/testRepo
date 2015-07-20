@@ -90,14 +90,18 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
             email: email
         });
 
-        userRef.child('settings').set({
-            snoozTime: 10,
+        userRef.child('settings').child('buffer').set({
+            beforeMealBuffer: 60,
+            snoozTime: 10
+        });
+
+        userRef.child('settings').child('reminders').set({
             morningReminder: "8.30",
             afternoonReminder: "13.30",
             eveningReminder: "18.00",
-            nightReminder: "21.00",
-            beforeMealBuffer: 60
-        })
+            nightReminder: "21.00"
+
+        });
 
         $state.go('app.tabs.medicines');
     }
@@ -162,6 +166,7 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
         authData = firebaseRef.getAuth(),
         doctorsData = null,
         notificationTimings = null,
+        nextAlarmTime = null,
         curTime = new Date().getTime(),
         medicineList = {
             m: {},
@@ -180,9 +185,32 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
 
     var todayTimeStamp = $scope.todayTimeStamp = new Date().setHours(0, 0, 0, 0);
 
-    userRef.child('settings').on('value', function(snapshot) {
+    var calculateNextAlarm = function(notifications) {
+        var arrTimestamps = [];
+        for (var key in notifications) {
+            var hours = notificationTimings[key].split('.')[0];
+            var minutes = notificationTimings[key].split('.')[1];
+            var alarmTime = new Date(todayTimeStamp).setHours(hours, minutes, 0, 0);
+            arrTimestamps.push(alarmTime);
+        }
+        arrTimestamps.sort();
+        
+        for ( var i = 0 ; i < arrTimestamps.length; i++) {
+            if(curTime < arrTimestamps[i])
+            {
+                nextAlarmTime = arrTimestamps[i];
+                break;
+            }
+        }
+
+    }
+
+    userRef.child('settings/reminders').on('value', function(snapshot) {
         notificationTimings = snapshot.val();
+        calculateNextAlarm(notificationTimings);
     })
+
+
 
     var joinPrescriptions = function(prescriptions) {
         var arrMedicines = [];
@@ -272,11 +300,25 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
 
         }
         var sortedMeds = sortByKey(unsortedMeds, 'date');
-        var arrMeds = [];
+
+        var bNextMed = true;
         for (var med in sortedMeds) {
 
-            if (sortedMeds[med].date > curTime) {
+            if (sortedMeds[med].date > todayTimeStamp) {
                 $scope.arrMedicines.push(sortedMeds[med]);
+
+                if(bNextMed && sortedMeds[med].date == nextAlarmTime) {
+                    for(var j = 0; j <$scope.arrMedicines.length; j++) {
+                       if($scope.arrMedicines[j].medDate == sortedMeds[med].medDate && $scope.arrMedicines[j].name == sortedMeds[med].name){
+                            $scope.arrMedicines[j].nextmed = "true";
+                            $scope.arrMedicines[j].dose = sortedMeds[med].dose;
+                           // bNextMed = false;
+                            break;
+                       }
+                       
+                    }
+                }
+                
             }
 
         }
@@ -291,10 +333,6 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
         return (date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear());
     }
 
-
-    $scope.medDetail = function(presId, medId) {
-        //userRef.child('visits').child(presId).child(medId).set(null);
-    }
 
 })
 
@@ -537,7 +575,7 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
 })
 
 
-.controller('LogoutCtrl', function($scope, $state, $ionicHistory,fireBaseData) {
+.controller('LogoutCtrl', function($scope, $state, $ionicHistory, fireBaseData) {
 
     $scope.logout = function() {
         var firebaseRef = fireBaseData.ref();

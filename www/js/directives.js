@@ -11,7 +11,8 @@ angular.module('starter.controllers')
                 callback: "&",
                 data: "=",
                 dose: "=",
-                readonly: "="
+                readonly: "=",
+                nextmed: "="
             },
             transclude: false,
             //template: '<label class="toggle toggle-positive custom-toggle"><div class="track"><div class="handle"></div></div></label>',
@@ -28,9 +29,9 @@ angular.module('starter.controllers')
 
                 $scope.time = $attrs.time;
                 var nWidetCount = document.querySelectorAll('.medicineCount').length == 4; //TODO : find better solution
-
+                //debugger;
                 if ($scope.dose) {
-                    $scope.openWidget = ($scope.dose == $scope.time) ? true : false;
+                    $scope.openWidget = ($scope.dose == $scope.time && $scope.nextmed == "true") ? true : false;
                 }
 
                 $scope.add = function() {
