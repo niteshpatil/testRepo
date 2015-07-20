@@ -91,6 +91,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         controller: 'RegisterCtrl'
     })
 
+    .state('logout', {
+        url: '/logout',
+        templateUrl: 'templates/logout.html',
+        controller: 'LogoutCtrl'
+    })
+
     .state('login', {
         url: '/login',
         templateUrl: 'templates/login.html',

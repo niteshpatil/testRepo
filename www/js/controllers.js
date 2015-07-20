@@ -4,10 +4,6 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
     var firebaseRef = fireBaseData.ref(),
         authData = firebaseRef.getAuth();
 
-    // if (authData) {
-    //     $state.go('app.tabs.medicines');
-    // }
-
     $scope.signInPage = function() {
         $state.go('login');
     }
@@ -404,7 +400,7 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
 
                 });
             }
-            
+
         }
 
         //  bAddTohistory = medData.medhistory;
@@ -537,5 +533,17 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
     $scope.deleteMedicine = function() {
         userRef.child('visits').child(prescriptionId).child(medicineId).set(null);
         $state.go('app.tabs.medicines');
+    }
+})
+
+
+.controller('LogoutCtrl', function($scope, $state, $ionicHistory,fireBaseData) {
+
+    $scope.logout = function() {
+        var firebaseRef = fireBaseData.ref();
+        $ionicHistory.clearCache();
+        $ionicHistory.clearHistory();
+        firebaseRef.unauth();
+        $state.go('register');
     }
 })
