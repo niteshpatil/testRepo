@@ -103,7 +103,7 @@ angular.module('starter.controllers')
                                popover.hide();
                             }
                             $scope.withMilk = function() {
-                               $scope.$parent.setMedDirection("With Milk");
+                               $scope.$parent.setMedDirection("With Meal");
                                popover.hide();
                             }
 
