@@ -393,7 +393,7 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
                 $scope.data.medDirection = directions;
 
             });
-        }, 100);
+        }, 200);
     }
 
     $scope.addMedicine = function() {
