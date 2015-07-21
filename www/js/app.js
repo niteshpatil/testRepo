@@ -46,6 +46,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         }
     })
 
+    
     .state('app.tabs.medicines', {
                 url: '/medicines',
                 views: {
@@ -125,6 +126,51 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         templateUrl: 'templates/profile-details.html',
         controller: 'ProfileDetailsController'
     })
+
+    .state('app.view-profile', {
+        url: '/view-profile',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/view-profile.html',
+                controller: 'ViewProfileController'
+            }
+        }
+    })
+
+    .state('app.change-password', {
+        url: '/change-password',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/change-password.html',
+                controller: 'ChangePasswordController'
+            }
+        }
+    })
+
+    .state('app.change-email', {
+        url: '/change-email',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/change-email.html',
+                controller: 'ChangeEmailController'
+            }
+        }
+    })
+
+    /*.state('app.view-profile', {
+        url: '/view-profile',
+        templateUrl: 'templates/view-profile.html',
+        controller: 'ViewProfileController'       
+    })
+    .state('app.tabs.change-password', {
+        url: '/change-password',
+        views: {
+            'medicines-tab': {
+                templateUrl: 'templates/change-password.html',
+                controller: 'ChangePasswordController'
+            }
+        }
+    })*/
 
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/register');

@@ -107,6 +107,86 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
     }
 })
 
+.controller('ViewProfileController', function($scope, fireBaseData, $state, $stateParams, $TimeService) {
+        var firebaseRef = fireBaseData.ref(),
+        authData = firebaseRef.getAuth();
+        var userRef = firebaseRef.child("patients").child(authData.uid);
+        userRef.child('personalDetails').on("value", function(snapshot) {
+           var data = snapshot.val();
+           data.dob = new Date(data.dob);
+           $scope.data = data;
+        });
+        //$state.go('app.tabs.medicines');
+        $scope.saveDetails = function() {
+            var userData = $scope.data;
+            var dateOfBirth = userData.dob,
+            formatedDate = (dateOfBirth.getMonth() + 1) + '/' + dateOfBirth.getDate() + '/' + dateOfBirth.getFullYear();
+            userRef.child('personalDetails').set({
+                firstName: userData.firstName,
+                lastName: userData.lastName,
+                dob: formatedDate,
+                sex: userData.sex,
+                phone: userData.phone
+            });
+            $state.go('app.tabs.medicines');
+        };
+
+})
+
+.controller('ChangePasswordController', function($scope, $state, $ionicPopup, fireBaseData) {
+        var usersRef = fireBaseData.usersRef(),
+         authData = usersRef.getAuth();
+         $scope.data = {};
+         $scope.changePassword = function() {
+            usersRef.changePassword({
+              email       : authData.password.email,
+              oldPassword : $scope.data.oldPassword,
+              newPassword : $scope.data.newPassword
+            }, function(error) {
+              if (error === null) {
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Change Password Success!',
+                    template: 'Password changed successfully'
+                });
+                $state.go('app.tabs.medicines');
+              } else {
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Change Password failed!',
+                    template: 'Please check your credentials!'
+                });
+              }
+            });
+        };
+})
+
+.controller('ChangeEmailController', function($scope, $state, $ionicPopup, fireBaseData) {
+        var usersRef = fireBaseData.usersRef(),
+         authData = usersRef.getAuth();
+         $scope.data = {};
+         $scope.data.oldEmail = authData.password.email;
+         $scope.changeEmail = function() {
+            usersRef.changeEmail({
+                oldEmail : authData.password.email,
+                newEmail : $scope.data.newEmail,
+                password : $scope.data.password            
+            }, function(error) {
+              if (error === null) {
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Change Email Success!',
+                    template: 'Email changed successfully'
+                });
+                $state.go('app.tabs.medicines');
+              } else {
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Change Email failed!',
+                    template: 'Please check your credentials!'
+                });
+              }
+            });
+        };
+})
+
+
 .controller('LoginCtrl', function($scope, $ionicPopup, $state, fireBaseData, $DataService) {
     var firebaseRef = fireBaseData.ref();
     $scope.showLoginForm = false; //Checking if user is logged in
@@ -132,7 +212,8 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
                 console.log("Login Failed!", error);
             } else {
                 $scope.showLoginForm = false;
-                // $DataService.setUserData(firebaseRef.child("patients").child(authData.uid));
+                //$DataService.setUserData(firebaseRef.child("users").child(authData.uid));
+                $DataService.setUserData(firebaseRef.child("patients").child(authData.uid));
                 $state.go('app.tabs.medicines');
                 console.log("Authenticated successfully with payload:", authData);
             }
