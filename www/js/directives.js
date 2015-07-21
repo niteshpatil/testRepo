@@ -12,13 +12,14 @@ angular.module('starter.controllers')
                 data: "=",
                 dose: "=",
                 readonly: "=",
-                nextmed: "="
+                nextmed: "=",
+                asneeded:"="
             },
             transclude: false,
             //template: '<label class="toggle toggle-positive custom-toggle"><div class="track"><div class="handle"></div></div></label>',
             template: function(element, attrs) {
                 var className = attrs.class;
-                var arrMedicineTime = ['<label ng-class="{openWidget : openWidget}" on-hold="popit($event)"  ng-click="add()" class="medicine-widget toggle toggle-positive custom-toggle ' + attrs.time + '">'];
+                var arrMedicineTime = ['<label ng-class="{openWidget : openWidget, asNeeded : bAsNeeded}" on-hold="popit($event)"  ng-click="add()" class="medicine-widget toggle toggle-positive custom-toggle ' + attrs.time + '">'];
                 arrMedicineTime.push('<div class="track" ng-class="{open : openWidget}"><div class="handle"></div>');
                 arrMedicineTime.push('<div class="medicineCount">{{value}}</div></div></label>');
                 return arrMedicineTime.join('');
@@ -26,7 +27,10 @@ angular.module('starter.controllers')
 
             controller: function($scope, $element, $attrs, $ionicPopover) {
                 $scope.value = $scope.data || 0;
-
+                $scope.bAsNeeded = $scope.asneeded || false;
+                if($scope.asneeded > 0) {
+                    $scope.value = $scope.asneeded;
+                }
                 $scope.time = $attrs.time;
                 var nWidetCount = document.querySelectorAll('.medicineCount').length == 4; //TODO : find better solution
                 //debugger;
@@ -35,13 +39,17 @@ angular.module('starter.controllers')
                 }
 
                 $scope.add = function() {
+                    var time = $scope.time;
                     if ($scope.readonly) {
                         return false;
                     }
                     $scope.value += $scope.$parent.increment;
+                    if($scope.bAsNeeded) {
+                        time = "asneeded"
+                    }
                     $scope.callback({
                         value: $scope.value,
-                        time: $scope.time
+                        time: time
                     });
                 }
 
@@ -88,9 +96,20 @@ angular.module('starter.controllers')
                                 popover.hide();
                             }
 
-                            $scope.asNeeded = function() { //TODO : find better solution
+                            $scope.asNeeded = function() { 
 
+                                $scope.$parent.resetValues();
+                                
+                                $scope.bAsNeeded  = !($scope.bAsNeeded);
+                                var otherWidgets = document.querySelectorAll('.dosage-wrap .medicine-widget');
 
+                                for(var i = 0;i< otherWidgets.length;i++) {
+                                    otherWidgets[i].style.display = ($scope.bAsNeeded == true) ? "none" : "inline-block"
+
+                                   // otherWidgets[i].style.display = "none";
+                                }
+                                $scope.$parent.setMedDirection("As Needed");
+                                $event.target.style.display = "inline-block";
                                 popover.hide();
                             }
 

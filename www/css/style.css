@@ -1,7 +1,7 @@
 /* Empty. Add your own CSS if you like */
 
 .pane {
-  background-color: #f8f3ef;
+    background-color: #f8f3ef;
 }
 #register-screen.pane {
     background: url('../img/register.jpg') no-repeat center center fixed;
@@ -92,6 +92,29 @@ input.sex-radio-button:after {
     border-color: #735D9B;
     background-color: #735D9B;
 }
+.custom-toggle.asNeeded .track {
+    border-color: #767367;
+    background-color: #767367;
+}
+.custom-toggle.asNeeded.closed  .track .handle{
+    border-color: #767367;
+    background-color: #767367;
+}
+
+/*.medicine-widget.asNeeded {
+    display: none;
+}
+*/
+.med-dosage-widget .medicine-widget.asNeeded {
+    display: none;
+}
+
+.med-dosage-widget .medicine-widget.asNeeded:first-child {
+    display: inline-block;
+}
+
+
+
 .custom-toggle .medicineCount {
     position: absolute;
     right: 16px;
@@ -103,6 +126,17 @@ input.sex-radio-button:after {
 }
 .custom-toggle.closed .track {
     width: 32px;
+}
+.custom-toggle.asNeeded .track {
+    width: 100px;
+}
+.dosage-wrap .medicine-widget.custom-toggle.asNeeded:after ,.med-dosage-widget .medicine-widget.custom-toggle.asNeeded:after {
+    content: "Max";
+    position: absolute;
+    left: 46px;
+    top: 9px;
+    color:#fff;
+    background: none;
 }
 .myMedicineWrapper .item-icon-left {
     padding: 10px;
@@ -144,42 +178,38 @@ a.add-med-button .add-me-info {
     border: none;
     padding: 10px;
 }
-
 a.medicineList {
-  background-color: #fff;
-  margin-bottom: 5px;
+    background-color: #fff;
+    margin-bottom: 5px;
 }
-
 .item.dosage-wrap {
-  padding: 10px;
+    padding: 10px;
 }
-
 .dosage-wrap .medicine-widget:not(:last-child):after {
-  left: 62px;
-  width: 15px;
+    left: 62px;
+    width: 15px;
 }
-
 .med-directions {
-  position: absolute;
-  top: 10px;
-  right: 20px;
-  font-size: 10px;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 10px;
 }
-
 .my-medicine .scroll {
     height: 100%;
 }
-
 .spinner {
-  margin: auto;
-  position: absolute;
-  top: 0; left: 0; bottom: 0; right: 0;
-  height: 85px;
-  text-align: center;
-  padding-top: 70px;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 85px;
+    text-align: center;
+    padding-top: 70px;
 }
-
 .spinner svg {
-  width: 50px !important;
-  height: 50px !important;
+    width: 50px !important;
+    height: 50px !important;
 }

@@ -11,12 +11,11 @@
                 <i class="icon ion-trash-a"></i>
             </button>
         </div>
-
-        <div>
-            <medicine-time time="morning"  data="dose.morning" readonly="true"></medicine-time>
-            <medicine-time time="afternoon"  data="dose.afternoon" readonly="true"></medicine-time>
-            <medicine-time time="evening"  data="dose.evening" readonly="true"></medicine-time>
-            <medicine-time time="night"  data="dose.night" readonly="true"></medicine-time>
+        <div  class="med-dosage-widget">
+            <medicine-time time="morning"  data="dose.morning" readonly="true" asneeded="dose.asneeded"></medicine-time>
+            <medicine-time time="afternoon"  data="dose.afternoon" readonly="true" asneeded="dose.asneeded"> </medicine-time>
+            <medicine-time time="evening"  data="dose.evening" readonly="true" asneeded="dose.asneeded"></medicine-time>
+            <medicine-time time="night"  data="dose.night" readonly="true" asneeded="dose.asneeded"></medicine-time>
         </div>
 
     </ion-content>

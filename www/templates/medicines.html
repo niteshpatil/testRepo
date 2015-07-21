@@ -7,33 +7,34 @@
             </ion-item>
         </ion-list> -->
         <a class="item item-icon-left add-med-button" href="#/add-medicine">
-        <i class="icon ion-ios-plus-outline"></i>
+            <i class="icon ion-ios-plus-outline"></i>
             <h2> Add Medicines</h2>
             <div class="add-me-info">Personally add medicines for timely remonders if you are not yet connected to your doctor, view them in your timeline</div>
         </a>
-        <ion-spinner id="med-loader" icon="ripple" class="spinner-assertive"></ion-spinner>   
+        <ion-spinner id="med-loader" icon="ripple" class="spinner-assertive"></ion-spinner>
         <div>
-        <div ng-repeat="(key, value) in arrMedicines | groupBy: 'medDate'" class="myMedicineWrapper">
-            <div>
-                <div class="item item-text-wrap med-dates">
-                    <i class="icon ion-calendar"></i> {{ getDateFromat(key) }}
+            <div ng-repeat="(key, value) in arrMedicines | groupBy: 'medDate'" class="myMedicineWrapper">
+                <div>
+                    <div class="item item-text-wrap med-dates">
+                        <i class="icon ion-calendar"></i> {{ getDateFromat(key) }}
+                    </div>
                 </div>
-            </div>
-            <a ng-repeat="medicine in value | unique: 'name'" class="item item-icon-left medicineList" ui-sref='app.med-detail({prescriptionid: medicine.prescriptionId,medicineid:medicine.medicineId})'>
-                <div>{{medicine.name}}</div>
-                <div class="med-directions">{{medicine.medDirection}}</div>
-                <medicine-time time="morning" callback="medicineAdd(value,time)" class="closed" data="medicine.morning" dose="medicine.dose" readonly="true" nextmed="medicine.nextmed"></medicine-time>
-                <medicine-time time="afternoon" callback="medicineAdd(value,time)" class="closed" data="medicine.afternoon" dose="medicine.dose" readonly="true" nextmed="medicine.nextmed"></medicine-time>
-                <medicine-time time="evening" callback="medicineAdd(value,time)" class="closed" data="medicine.evening" dose="medicine.dose" readonly="true" nextmed="medicine.nextmed"></medicine-time>
-                <medicine-time time="night" callback="medicineAdd(value,time)" class="closed" data="medicine.night" dose="medicine.dose" readonly="true" nextmed="medicine.nextmed"></medicine-time>
-
-                <!-- <div>Morning Dosage : {{medicine.morning}} </div>
+                <a ng-repeat="medicine in value | unique: 'name'" class="item item-icon-left medicineList" ui-sref='app.med-detail({prescriptionid: medicine.prescriptionId,medicineid:medicine.medicineId})'>
+                    <div>{{medicine.name}}</div>
+                    <div class="med-directions">{{medicine.medDirection}}</div>
+                    <div class="med-dosage-widget">
+                        <medicine-time time="morning" callback="medicineAdd(value,time)" class="closed" data="medicine.morning" dose="medicine.dose" readonly="true" nextmed="medicine.nextmed" asneeded="medicine.asneeded"></medicine-time>
+                        <medicine-time time="afternoon" callback="medicineAdd(value,time)" class="closed" data="medicine.afternoon" dose="medicine.dose" readonly="true" nextmed="medicine.nextmed" asneeded="medicine.asneeded"></medicine-time>
+                        <medicine-time time="evening" callback="medicineAdd(value,time)" class="closed" data="medicine.evening" dose="medicine.dose" readonly="true" nextmed="medicine.nextmed" asneeded="medicine.asneeded"></medicine-time>
+                        <medicine-time time="night" callback="medicineAdd(value,time)" class="closed" data="medicine.night" dose="medicine.dose" readonly="true" nextmed="medicine.nextmed" asneeded="medicine.asneeded"></medicine-time>
+                    </div>
+                    <!-- <div>Morning Dosage : {{medicine.morning}} </div>
                 <div>Aftrenoon Dosage : {{medicine.afternoon}} </div>
                 <div>Evening Dosage : {{medicine.evening}} </div>
                 <div>Night Dosage : {{medicine.night}} </div> -->
-            </a>
-            <br>
-        </div>
+                </a>
+                <br>
+            </div>
         </div>
         <!-- <div class="list">
             <a class="item item-icon-left" href="#" ng-repeat="message in arrMedicines">

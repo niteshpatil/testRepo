@@ -194,10 +194,9 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
             arrTimestamps.push(alarmTime);
         }
         arrTimestamps.sort();
-        
-        for ( var i = 0 ; i < arrTimestamps.length; i++) {
-            if(curTime < arrTimestamps[i])
-            {
+
+        for (var i = 0; i < arrTimestamps.length; i++) {
+            if (curTime < arrTimestamps[i]) {
                 nextAlarmTime = arrTimestamps[i];
                 break;
             }
@@ -269,31 +268,52 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
                 }
 
 
-                for (var dose in dosage) {
-                    if (dosage[dose] > 0) {
-                        var hours = notificationTimings[dose + "Reminder"].split('.')[0];
-                        var minutes = notificationTimings[dose + "Reminder"].split('.')[1];
-                        medDate = new Date(medDate).setHours(hours, minutes, 0, 0);
-                        medDates.push(medDate);
+                if (dosage.asneeded > 0) {
+                    var hours = 23,
+                        minutes = 59;
+                    medDate = new Date(medDate).setHours(hours, minutes, 0, 0);
+                    medDates.push(medDate);
+                    unsortedMeds.push({
+                        date: medDate,
+                        name: med.name,
+                        morning: med.dosage.morning,
+                        afternoon: med.dosage.afternoon,
+                        evening: med.dosage.evening,
+                        night: med.dosage.night,
+                        asneeded: med.dosage.asneeded,
+                        medDate: new Date(medDate).setHours(0, 0, 0, 0),
+                        dose: dose,
+                        medDirection: med.medDirection,
+                        prescriptionId: med.prescriptionId,
+                        medicineId: med.medId
+                    });
+                } else {
+                    for (var dose in dosage) {
+                        if (dosage[dose] > 0) {
 
-                        unsortedMeds.push({
-                            date: medDate,
-                            name: med.name,
-                            morning: med.dosage.morning,
-                            afternoon: med.dosage.afternoon,
-                            evening: med.dosage.evening,
-                            night: med.dosage.night,
-                            medDate: new Date(medDate).setHours(0, 0, 0, 0),
-                            dose: dose,
-                            medDirection: med.medDirection,
-                            prescriptionId: med.prescriptionId,
-                            medicineId: med.medId
-                        });
+                            var hours = (dose != "asneeded") ? notificationTimings[dose + "Reminder"].split('.')[0] : 23;
+                            var minutes = (dose != "asneeded") ? notificationTimings[dose + "Reminder"].split('.')[1] : 59;
+                            medDate = new Date(medDate).setHours(hours, minutes, 0, 0);
+                            medDates.push(medDate);
+
+                            unsortedMeds.push({
+                                date: medDate,
+                                name: med.name,
+                                morning: med.dosage.morning,
+                                afternoon: med.dosage.afternoon,
+                                evening: med.dosage.evening,
+                                night: med.dosage.night,
+                                medDate: new Date(medDate).setHours(0, 0, 0, 0),
+                                dose: dose,
+                                medDirection: med.medDirection,
+                                prescriptionId: med.prescriptionId,
+                                medicineId: med.medId
+                            });
+
+                        }
 
                     }
-
                 }
-
             }
 
 
@@ -307,18 +327,18 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
             if (sortedMeds[med].date > todayTimeStamp) {
                 $scope.arrMedicines.push(sortedMeds[med]);
 
-                if(bNextMed && sortedMeds[med].date == nextAlarmTime) {
-                    for(var j = 0; j <$scope.arrMedicines.length; j++) {
-                       if($scope.arrMedicines[j].medDate == sortedMeds[med].medDate && $scope.arrMedicines[j].name == sortedMeds[med].name){
+                if (bNextMed && sortedMeds[med].date == nextAlarmTime) {
+                    for (var j = 0; j < $scope.arrMedicines.length; j++) {
+                        if ($scope.arrMedicines[j].medDate == sortedMeds[med].medDate && $scope.arrMedicines[j].name == sortedMeds[med].name) {
                             $scope.arrMedicines[j].nextmed = "true";
                             $scope.arrMedicines[j].dose = sortedMeds[med].dose;
-                           // bNextMed = false;
+                            // bNextMed = false;
                             break;
-                       }
-                       
+                        }
+
                     }
                 }
-                
+
             }
 
         }
@@ -400,7 +420,9 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
 
                 return false;
             } else if ($scope.data.dosage.morning == 0 && $scope.data.dosage.afternoon == 0 && $scope.data.dosage.evening == 0 && $scope.data.dosage.night == 0) {
-
+                if ($scope.data.dosage.asneeded > 0) {
+                    return true;
+                }
                 return false;
 
             } else {
@@ -534,10 +556,7 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
                     if (bRound == true) {
                         newScope.value = Math.floor(newScope.value);
                     }
-                    $scope.medicineAdd({
-                        value: newScope.value,
-                        time: newScope.time
-                    });
+                    $scope.medicineAdd(newScope.value, newScope.time);
 
                 });
             }, 100)
@@ -563,11 +582,15 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
         $scope.dose.afternoon = medData.dosage.afternoon;
         $scope.dose.evening = medData.dosage.evening;
         $scope.dose.night = medData.dosage.night;
+        if (medData.dosage.asneeded > 0) {
+            $scope.dose.asneeded = medData.dosage.asneeded;
+        }
+        setTimeout(function() {
+            $scope.$apply();
+        }, 100);
     });
 
-    setTimeout(function() {
-        $scope.$apply();
-    }, 100);
+
 
     $scope.deleteMedicine = function() {
         userRef.child('visits').child(prescriptionId).child(medicineId).set(null);
