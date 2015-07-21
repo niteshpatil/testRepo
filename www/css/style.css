@@ -165,3 +165,21 @@ a.medicineList {
   right: 20px;
   font-size: 10px;
 }
+
+.my-medicine .scroll {
+    height: 100%;
+}
+
+.spinner {
+  margin: auto;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  height: 85px;
+  text-align: center;
+  padding-top: 70px;
+}
+
+.spinner svg {
+  width: 50px !important;
+  height: 50px !important;
+}

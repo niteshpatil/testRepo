@@ -325,6 +325,7 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
 
         setTimeout(function() {
             $scope.$apply();
+            document.getElementById('med-loader').style.display = "none";
         }, 100);
     });
 

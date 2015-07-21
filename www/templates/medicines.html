@@ -1,6 +1,6 @@
 <ion-view title="My Medicines" left-buttons="leftButtons">
 
-    <ion-content has-header="true" padding="true">
+    <ion-content class="my-medicine" has-header="true" padding="true">
         <!-- <ion-list>
             <ion-item ng-repeat="message in prescriptions">
                 {{message.date}}
@@ -11,7 +11,7 @@
             <h2> Add Medicines</h2>
             <div class="add-me-info">Personally add medicines for timely remonders if you are not yet connected to your doctor, view them in your timeline</div>
         </a>
-        
+        <ion-spinner id="med-loader" icon="ripple" class="spinner-assertive"></ion-spinner>   
         <div>
         <div ng-repeat="(key, value) in arrMedicines | groupBy: 'medDate'" class="myMedicineWrapper">
             <div>
