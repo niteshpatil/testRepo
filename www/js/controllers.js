@@ -166,50 +166,17 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
         authData = firebaseRef.getAuth(),
         doctorsData = null,
         notificationTimings = null,
+        prevAlarmTime = null,
         nextAlarmTime = null,
+        nextAlarm = null,
         curTime = new Date().getTime(),
-        medicineList = {
-            m: {},
-            a: {},
-            e: {},
-            n: {}
-        };
+        userRef = firebaseRef.child("patients").child(authData.uid),
+        //  todayMeds = {},
+        joinPrescriptions = null,
+        unSortedMeds = {};
 
-    var userRef = firebaseRef.child("patients").child(authData.uid);
-    $scope.getDateFromat = function(timeStamp) {
-        var date = new Date(parseInt(timeStamp));
-        return date.toDateString(); //(date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear());
-    }
-
-    $scope.prescriptions = [];
-
-    var todayTimeStamp = $scope.todayTimeStamp = new Date().setHours(0, 0, 0, 0);
-
-    var calculateNextAlarm = function(notifications) {
-        var arrTimestamps = [];
-        for (var key in notifications) {
-            var hours = notificationTimings[key].split('.')[0];
-            var minutes = notificationTimings[key].split('.')[1];
-            var alarmTime = new Date(todayTimeStamp).setHours(hours, minutes, 0, 0);
-            arrTimestamps.push(alarmTime);
-        }
-        arrTimestamps.sort();
-
-        for (var i = 0; i < arrTimestamps.length; i++) {
-            if (curTime < arrTimestamps[i]) {
-                nextAlarmTime = arrTimestamps[i];
-                break;
-            }
-        }
-
-    }
-
-    userRef.child('settings/reminders').on('value', function(snapshot) {
-        notificationTimings = snapshot.val();
-        calculateNextAlarm(notificationTimings);
-    })
-
-
+    var todayTimeStamp = prevAlarmTime = $scope.todayTimeStamp = new Date().setHours(0, 0, 0, 0);
+    //todayMeds[todayTimeStamp] = [];
 
     var joinPrescriptions = function(prescriptions) {
         var arrMedicines = [];
@@ -221,138 +188,159 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
                 arrMedicines.push(prescriptions[key][mId]);
             }
 
-            // for (var i = 0; i < prescriptions[key].length; i++) {
-            //     prescriptions[key][i].prescriptionId = key;
-            //     prescriptions[key][i].medId = i;
-            //     arrMedicines.push(prescriptions[key][i]);
-            // }
-
         }
         return arrMedicines;
+    };
+
+    $scope.getDateFromat = function(timeStamp) {
+        var date = new Date(parseInt(timeStamp));
+        return date.toDateString(); //(date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear());
     }
 
-    userRef.child('visits').startAt(todayTimeStamp).on("value", function(snapshot) {
-        console.log('changed')
-        $scope.arrMedicines = [];
-        var medicineList = snapshot.val();
-        var unsortedMeds = [];
-        var medDates = [];
+    var calculateNextAlarm = function(notifications) {
+        var arrTimestamps = [],
+            structTimes = {
+                "0": "morning",
+                "1": "afternoon",
+                "2": "evening",
+                "3": "night"
+            }
+        for (var key in notifications) {
+            var hours = notificationTimings[key].split('.')[0];
+            var minutes = notificationTimings[key].split('.')[1];
+            var alarmTime = new Date(todayTimeStamp).setHours(hours, minutes, 0, 0);
+            arrTimestamps.push(alarmTime);
+        }
+        arrTimestamps.sort();
 
-        function sortByKey(array, key) {
-            return array.sort(function(a, b) {
-                var x = a[key];
-                var y = b[key];
-                return ((x < y) ? -1 : ((x > y) ? 1 : 0));
-            });
+        for (var i = 0; i < arrTimestamps.length; i++) {
+            if (curTime < arrTimestamps[i]) {
+                nextAlarmTime = arrTimestamps[i];
+                nextAlarm = structTimes[i];
+                break;
+            } else {
+                prevAlarmTime = arrTimestamps[i];
+            }
         }
 
-        var medicines = joinPrescriptions(medicineList);
+    }
 
-        for (var key in medicines) {
-            var med = medicines[key];
-            var startDate = med.startDate;
-            var cycle = med.duration;
-            var frequency = med.frequency;
-            var dosage = med.dosage;
-            var medDate = null;
-            var dose = null;
-            var medDirection = med.medDirection;
+    userRef.child('settings/reminders').on('value', function(snapshot) {
+        notificationTimings = snapshot.val();
+        calculateNextAlarm(notificationTimings);
+        console.log("next :" + new Date(nextAlarmTime) + "  Prev : " + new Date(prevAlarmTime));
+    })
 
-            for (i = 0; i < cycle; i++) {
-                if (i == 0) {
-                    medDate = startDate
+    userRef.child('visits').startAt(todayTimeStamp).on("value", function(snapshot) {
+        var allmeds = snapshot.val(),
+            medicines = joinPrescriptions(allmeds),
+            startDate = null,
+            cycle = null,
+            frequency = null,
+            medDate = null,
+            medDateMidnight = null,
+            medicine = null,
+            objMedicine = null,
+            dosage = null;
+
+        unSortedMeds = {};
+        $scope.arrMedicines = [];
+
+        for (var i = 0; i < medicines.length; i++) {
+            objMedicine = {};
+            medicine = medicines[i];
+            startDate = medicine.startDate;
+            cycle = medicine.duration;
+            frequency = medicine.frequency;
+            dosage = medicine.dosage;
+
+            if (medicine.endDate < todayTimeStamp) {
+                continue;
+            }
+
+            for (var j = 0; j < cycle; j++) {
+                if (j == 0 && startDate == todayTimeStamp) {
+                    medDate = todayTimeStamp;
                 } else {
                     medDate = $TimeService.getFutureDate(startDate, frequency);
                     medDate = $TimeService.getTimeStampFromDate(medDate);
-                    frequency += med.frequency;
+                    frequency += medicine.frequency;
                 }
 
-
-                if (dosage.asneeded > 0) {
-                    var hours = 23,
-                        minutes = 59;
-                    medDate = new Date(medDate).setHours(hours, minutes, 0, 0);
-                    medDates.push(medDate);
-                    unsortedMeds.push({
-                        date: medDate,
-                        name: med.name,
-                        morning: med.dosage.morning,
-                        afternoon: med.dosage.afternoon,
-                        evening: med.dosage.evening,
-                        night: med.dosage.night,
-                        asneeded: med.dosage.asneeded,
-                        medDate: new Date(medDate).setHours(0, 0, 0, 0),
-                        dose: dose,
-                        medDirection: med.medDirection,
-                        prescriptionId: med.prescriptionId,
-                        medicineId: med.medId
-                    });
-                } else {
-                    for (var dose in dosage) {
-                        if (dosage[dose] > 0) {
-
-                            var hours = (dose != "asneeded") ? notificationTimings[dose + "Reminder"].split('.')[0] : 23;
-                            var minutes = (dose != "asneeded") ? notificationTimings[dose + "Reminder"].split('.')[1] : 59;
-                            medDate = new Date(medDate).setHours(hours, minutes, 0, 0);
-                            medDates.push(medDate);
-
-                            unsortedMeds.push({
-                                date: medDate,
-                                name: med.name,
-                                morning: med.dosage.morning,
-                                afternoon: med.dosage.afternoon,
-                                evening: med.dosage.evening,
-                                night: med.dosage.night,
-                                medDate: new Date(medDate).setHours(0, 0, 0, 0),
-                                dose: dose,
-                                medDirection: med.medDirection,
-                                prescriptionId: med.prescriptionId,
-                                medicineId: med.medId
-                            });
-
-                        }
-
-                    }
+                if (medDate < todayTimeStamp) {
+                    continue;
                 }
-            }
 
+                //medDate = new Date(medDate).setHours(hours, minutes, 0, 0);
+                medDateMidnight = new Date(medDate).setHours(0, 0, 0, 0)
 
+                objMedicine = {
+                    date: medDate,
+                    name: medicine.name,
+                    morning: medicine.dosage.morning,
+                    afternoon: medicine.dosage.afternoon,
+                    evening: medicine.dosage.evening,
+                    night: medicine.dosage.night,
 
-        }
-        var sortedMeds = sortByKey(unsortedMeds, 'date');
-
-        var bNextMed = true;
-        for (var med in sortedMeds) {
-
-            if (sortedMeds[med].date > todayTimeStamp) {
-                $scope.arrMedicines.push(sortedMeds[med]);
-
-                if (bNextMed && sortedMeds[med].date == nextAlarmTime) {
-                    for (var j = 0; j < $scope.arrMedicines.length; j++) {
-                        if ($scope.arrMedicines[j].medDate == sortedMeds[med].medDate && $scope.arrMedicines[j].name == sortedMeds[med].name) {
-                            $scope.arrMedicines[j].nextmed = "true";
-                            $scope.arrMedicines[j].dose = sortedMeds[med].dose;
-                            // bNextMed = false;
-                            break;
-                        }
-
-                    }
+                    medDate: medDateMidnight,
+                    medDirection: medicine.medDirection,
+                    prescriptionId: medicine.prescriptionId,
+                    medicineId: medicine.medId
                 }
+
+                if (medicine.dosage.asneeded > 0) {
+                    objMedicine.asneeded = medicine.dosage.asneeded;
+                }
+
+                if (!unSortedMeds[medDate]) {
+                    unSortedMeds[medDate] = [];
+                }
+
+                unSortedMeds[medDate].push(objMedicine);
+
 
             }
 
         }
+
+
+        var medicineList = [];
+
+        if (!unSortedMeds[todayTimeStamp]) {
+            return false;
+        }
+
+        var swapCounter = 0;
+        for (var i = 0; i < unSortedMeds[todayTimeStamp].length; i++) {
+            var medicineArray = unSortedMeds[todayTimeStamp];
+            var medicine = medicineArray[i];
+
+            if (medicine[nextAlarm] > 0) {
+                medicine.nextmed = true;
+                medicine.dose = nextAlarm;
+                medicineArray.move(i, 0);
+                swapCounter++;
+            }
+
+        }
+
+        for (var date in unSortedMeds) {
+
+            for (var i = 0; i < unSortedMeds[date].length; i++) {
+                medicineList.push(unSortedMeds[date][i]);
+            }
+
+        }
+
+        $scope.arrMedicines = medicineList;
 
         setTimeout(function() {
             $scope.$apply();
             document.getElementById('med-loader').style.display = "none";
         }, 100);
+
     });
 
-    $scope.getDate = function(timeStamp) {
-        var date = new Date(timeStamp)
-        return (date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear());
-    }
 
 
 })
@@ -396,6 +384,29 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
         }, 200);
     }
 
+    var noMedDetailsAlert = function() {
+        $ionicPopup.alert({
+            title: "Add Medicine",
+            template: "Please add complete medicine details !!!"
+        });
+    }
+
+    var validateForm = function() {
+
+        if (!$scope.data.medicine) {
+
+            return false;
+        } else if ($scope.data.dosage.morning == 0 && $scope.data.dosage.afternoon == 0 && $scope.data.dosage.evening == 0 && $scope.data.dosage.night == 0) {
+            if ($scope.data.dosage.asneeded > 0) {
+                return true;
+            }
+            return false;
+
+        } else {
+            return true
+        }
+    }
+
     $scope.addMedicine = function() {
 
         var medData = $scope.data,
@@ -406,31 +417,6 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
             duration = parseInt(medData.duration),
             endDate = $TimeService.getFutureDateFromToday((startingFrom + frequency) * duration),
             endDateTimeStamp = $TimeService.getTimeStampFromDate(endDate);
-
-        var noMedDetailsAlert = function() {
-            $ionicPopup.alert({
-                title: 'Add Medicine',
-                template: 'Please Enter Medicine Details!'
-            });
-        }
-
-        var validateForm = function() {
-
-            if (!medName) {
-
-                return false;
-            } else if ($scope.data.dosage.morning == 0 && $scope.data.dosage.afternoon == 0 && $scope.data.dosage.evening == 0 && $scope.data.dosage.night == 0) {
-                if ($scope.data.dosage.asneeded > 0) {
-                    return true;
-                }
-                return false;
-
-            } else {
-                return true
-            }
-        }
-
-
 
         if (MedicineArray.length == 0) {
             if (!validateForm()) {
@@ -506,6 +492,11 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
             duration = parseInt(medData.duration),
             endDate = $TimeService.getFutureDateFromToday((startingFrom + frequency) * duration),
             endDateTimeStamp = $TimeService.getTimeStampFromDate(endDate);
+
+        if(!validateForm()) {
+            noMedDetailsAlert();
+            return false;
+        }
 
         MedicineArray.push({
             name: medName,

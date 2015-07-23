@@ -59,7 +59,7 @@ angular.module('starter.services', [])
         },
 
         getFutureDateFromToday:function(offset){ 
-            var today = new Date().getTime();
+            var today = new Date().setHours(0,0,0,0);
             return new Date(today + parseInt(offset) * 24 * 60 * 60 * 1000);
         },
 
