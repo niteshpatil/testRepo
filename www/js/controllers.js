@@ -178,7 +178,7 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
     var todayTimeStamp = prevAlarmTime = $scope.todayTimeStamp = new Date().setHours(0, 0, 0, 0);
     //todayMeds[todayTimeStamp] = [];
 
-    var joinPrescriptions = function(prescriptions) {
+        joinPrescriptions = function(prescriptions) {
         var arrMedicines = [];
         for (var key in prescriptions) {
 
@@ -194,8 +194,8 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
 
     $scope.getDateFromat = function(timeStamp) {
         var date = new Date(parseInt(timeStamp));
-        return date.toDateString(); //(date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear());
-    }
+        return date.toDateString();
+    };
 
     var calculateNextAlarm = function(notifications) {
         var arrTimestamps = [],
@@ -204,7 +204,8 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
                 "1": "afternoon",
                 "2": "evening",
                 "3": "night"
-            }
+            };
+
         for (var key in notifications) {
             var hours = notificationTimings[key].split('.')[0];
             var minutes = notificationTimings[key].split('.')[1];
@@ -223,13 +224,13 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
             }
         }
 
-    }
+    };
 
     userRef.child('settings/reminders').on('value', function(snapshot) {
         notificationTimings = snapshot.val();
         calculateNextAlarm(notificationTimings);
         console.log("next :" + new Date(nextAlarmTime) + "  Prev : " + new Date(prevAlarmTime));
-    })
+    });
 
     userRef.child('visits').startAt(todayTimeStamp).on("value", function(snapshot) {
         var allmeds = snapshot.val(),
@@ -272,7 +273,7 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
                 }
 
                 //medDate = new Date(medDate).setHours(hours, minutes, 0, 0);
-                medDateMidnight = new Date(medDate).setHours(0, 0, 0, 0)
+                medDateMidnight = new Date(medDate).setHours(0, 0, 0, 0);
 
                 objMedicine = {
                     date: medDate,
@@ -286,7 +287,7 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
                     medDirection: medicine.medDirection,
                     prescriptionId: medicine.prescriptionId,
                     medicineId: medicine.medId
-                }
+                };
 
                 if (medicine.dosage.asneeded > 0) {
                     objMedicine.asneeded = medicine.dosage.asneeded;

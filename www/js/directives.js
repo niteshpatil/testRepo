@@ -45,13 +45,13 @@ angular.module('starter.controllers')
                     }
                     $scope.value += $scope.$parent.increment;
                     if($scope.bAsNeeded) {
-                        time = "asneeded"
+                        time = "asneeded";
                     }
                     $scope.callback({
                         value: $scope.value,
                         time: time
                     });
-                }
+                };
 
 
                 $scope.bFractionDose = false;
@@ -75,7 +75,7 @@ angular.module('starter.controllers')
                             $scope.popupReset = function() {
                                 $scope.$parent.resetValues();
                                 popover.hide();
-                            }
+                            };
 
                             $scope.fractionDosage = function() {
                                 var bIncrement = true,
@@ -94,7 +94,7 @@ angular.module('starter.controllers')
 
                                 $scope.$parent.resetValues(incrementVal, bIncrement, bRound);
                                 popover.hide();
-                            }
+                            };
 
                             $scope.asNeeded = function() { 
 
@@ -111,20 +111,20 @@ angular.module('starter.controllers')
                                 $scope.$parent.setMedDirection("As Needed");
                                 $event.target.style.display = "inline-block";
                                 popover.hide();
-                            }
+                            };
 
                             $scope.beforeMeal = function() {
                                 $scope.$parent.setMedDirection("Before Meal");
                                 popover.hide();
-                            }
+                            };
                             $scope.afterMeal = function() {
                                 $scope.$parent.setMedDirection("After Meal");
                                popover.hide();
-                            }
+                            };
                             $scope.withMilk = function() {
                                $scope.$parent.setMedDirection("With Meal");
                                popover.hide();
-                            }
+                            };
 
                             $scope.$on('popover.hidden', function() {
                                 // manually remove DOM elements
@@ -133,7 +133,7 @@ angular.module('starter.controllers')
                                 //stopListening();
                             });
                         });
-                }
+                };
             }
         };
     }
