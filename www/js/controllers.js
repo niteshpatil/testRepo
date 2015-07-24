@@ -368,18 +368,24 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
     $scope.data = {};
     $scope.data.dosage = medicineTimes;
     $scope.increment = 1;
+    $scope.bFractionDose = false;
     $scope.data.medDirection = "After Meal";
-    var MedicineArray = [];
+    $scope.medicineArray = [];
 
     $scope.medicineAdd = function(val, time) {
         $scope.data.dosage[time] = val;
     }
+
+    $scope.formatDate = $TimeService.getDateFromTimeStamp;
 
     $scope.setMedDirection = function(directions) {
 
         setTimeout(function() {
             $scope.$apply(function() {
                 $scope.data.medDirection = directions;
+                if(directions=="After Meal"){
+                    delete $scope.data.dosage["asneeded"];
+                }
 
             });
         }, 200);
@@ -419,12 +425,12 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
             endDate = $TimeService.getFutureDateFromToday((startingFrom + frequency) * duration),
             endDateTimeStamp = $TimeService.getTimeStampFromDate(endDate);
 
-        if (MedicineArray.length == 0) {
+        if ($scope.medicineArray.length == 0) {
             if (!validateForm()) {
                 noMedDetailsAlert();
                 return false;
             } else {
-                MedicineArray.push({
+                $scope.medicineArray.push({
                     name: medName,
                     startDate: $TimeService.getTimeStampFromDate(startDate),
                     frequency: frequency,
@@ -437,7 +443,7 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
             }
         } else {
             if (validateForm()) {
-                MedicineArray.push({
+                $scope.medicineArray.push({
                     name: medName,
                     startDate: $TimeService.getTimeStampFromDate(startDate),
                     frequency: frequency,
@@ -451,22 +457,12 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
 
         }
 
-        //  bAddTohistory = medData.medhistory;
-        // var len = null,
-
-        // prescriptionId = userRef.child('visits').push().key()
-
-
-        // for (var i = 0, len = MedicineArray.length; i < len; i++) {
-
-        // }
-
-        userRef.child('visits').push(MedicineArray, function() {
+        userRef.child('visits').push($scope.medicineArray, function() {
             $state.go('app.tabs.medicines');
         }).setPriority(endDateTimeStamp);
 
 
-        MedicineArray = [];
+        $scope.medicineArray = [];
 
         $scope.data = {
             dosage: {
@@ -481,7 +477,13 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
             medDirection: "After Meal"
         };
 
+        $scope.increment = 1;
+
         $scope.resetValues();
+    }
+
+    $scope.deleteMedicine = function (index) {
+        $scope.medicineArray.splice(index, 1);
     }
 
     $scope.addToPrescription = function() {
@@ -499,7 +501,7 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
             return false;
         }
 
-        MedicineArray.push({
+        $scope.medicineArray.push({
             name: medName,
             startDate: $TimeService.getTimeStampFromDate(startDate),
             frequency: frequency,
@@ -527,8 +529,9 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
 
     }
 
+
     $scope.resetValues = function(value, bIncrement, bRound) {
-        var elements = document.querySelectorAll('.medicineCount'),
+        var elements = document.querySelectorAll('.dosage-wrap .medicineCount'),
             elementScope = [],
             val = value || 0;
 

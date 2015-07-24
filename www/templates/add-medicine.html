@@ -45,38 +45,6 @@
                 </select>
             </label>
 
-           <!--  <div class="item item-input">
-                <div class="input-label">
-                    <select ng-init="data.frequency = 1" ng-model="data.frequency">
-                        <option value="1" ng-selected="true">EveryDay</option>
-                        <option value="2">Every 2 days</option>
-                        <option value="3">Every 3 days</option>
-                        <option value="4">Every 4 days</option>
-                        <option value="5">Every 5 days</option>
-                        <option value="6">Every 6 days</option>
-                        <option value="7">Every week</option>
-
-                    </select>
-                </div>
-                <span>For</span>
-                <div>
-                    <select ng-init="data.duration = 1" ng-model="data.duration">
-                        <option value="1" ng-selected="true">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-
-                    </select>
-                </div>
-                <div>
-                    Cycle
-                </div>
-                <button class="button button-small icon ion-plus" ng-click="addToPrescription()"></button>
-            </div> -->
-
             <div class="row">
                 
                 <div class="col col-33"><select ng-init="data.frequency = 1" ng-model="data.frequency">
@@ -114,6 +82,15 @@
         </div>
 
         <button class="button button-block button-calm" ng-click="addMedicine()">Add to My medicines</button>
+
+
+        <div ng-repeat="medicine in medicineArray" class="medInPrescription">
+        <h4>{{medicine.name}}</h4>
+        <div>Dosage</div>
+        <div>From <span> {{ formatDate(medicine.startDate)}} </span> For <span>{{medicine.duration}} Days</span></div>
+        <i class="icon ion-android-cancel deleteMed" ng-click="deleteMedicine($index)"></i>
+          
+        </div>
 
     </ion-content>
 </ion-view>

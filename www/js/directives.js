@@ -88,7 +88,7 @@ angular.module('starter.controllers')
                                     bRound = true;
                                 } else {
                                     $scope.$parent.increment = 0.5;
-                                    incrementVal = 0.5;
+                                    incrementVal = 0;
                                     $scope.bFractionDose = true;
                                 }
 
@@ -108,7 +108,14 @@ angular.module('starter.controllers')
 
                                    // otherWidgets[i].style.display = "none";
                                 }
-                                $scope.$parent.setMedDirection("As Needed");
+
+                                if($scope.bAsNeeded){
+                                  $scope.$parent.setMedDirection("As Needed");  
+                                }
+                                else{
+                                  $scope.$parent.setMedDirection("After Meal");  
+                                }
+                                
                                 $event.target.style.display = "inline-block";
                                 popover.hide();
                             };
