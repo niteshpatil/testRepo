@@ -308,6 +308,8 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
         var medicineList = [];
 
         if (!unSortedMeds[todayTimeStamp]) {
+            
+            document.getElementById('med-loader').style.display = "none";
             return false;
         }
 
@@ -457,7 +459,7 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
 
         }
 
-        userRef.child('visits').push($scope.medicineArray, function() {
+        userRef.child('visits').push(angular.copy($scope.medicineArray), function() {
             $state.go('app.tabs.medicines');
         }).setPriority(endDateTimeStamp);
 
@@ -500,6 +502,8 @@ angular.module('starter.controllers', ['firebase', 'angular.filter'])
             noMedDetailsAlert();
             return false;
         }
+
+
 
         $scope.medicineArray.push({
             name: medName,

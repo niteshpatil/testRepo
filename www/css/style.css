@@ -257,6 +257,10 @@ a.medicineList {
     position: relative;
 }
 
+.addToPresc {
+    font-size: 35px;
+    cursor: pointer;
+}
 .medInPrescription .deleteMed {
     position: absolute;
     top: 34px;

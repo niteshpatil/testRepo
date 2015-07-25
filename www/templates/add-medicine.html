@@ -69,7 +69,7 @@
 
                     </select></div>
                     <div class="col col-20">Cycle</div>
-                <div class="col"><button class="button button-small icon ion-plus" ng-click="addToPrescription()"></button></div>
+                <div class="col"><span class="icon ion-android-add-circle addToPresc" ng-click="addToPrescription()"></span></div>
             </div>
 
             <!--  <div class="item item-checkbox">
@@ -86,7 +86,7 @@
 
         <div ng-repeat="medicine in medicineArray" class="medInPrescription">
         <h4>{{medicine.name}}</h4>
-        <div>Dosage</div>
+        <div>Dosage ( {{medicine.dosage.morning}} - {{ medicine.dosage.afternoon}} - {{medicine.dosage.evening}} - {{medicine.dosage.night}})</div>
         <div>From <span> {{ formatDate(medicine.startDate)}} </span> For <span>{{medicine.duration}} Days</span></div>
         <i class="icon ion-android-cancel deleteMed" ng-click="deleteMedicine($index)"></i>
           
