@@ -1,0 +1,21 @@
+<ion-view view-title="Change Email Address" name="change-email">
+    <ion-content class="padding">
+        <div class="list">
+            <label class="item item-input">
+                <span class="input-label" >Old Email</span>
+                <input type="text" ng-model="data.oldEmail">
+            </label>
+            <label class="item item-input">
+                <span class="input-label">New Email</span>
+                <input type="text" ng-model="data.newEmail">
+            </label> 
+            <label class="item item-input">
+                <span class="input-label">Password</span>
+                <input type="password" ng-model="data.password">
+            </label>                   
+        </div>
+        <button class="button button-positive" ng-click="changeEmail()">
+            Change Email
+        </button>
+    </ion-content>
+</ion-view>

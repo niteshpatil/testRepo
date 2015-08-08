@@ -103,6 +103,43 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         controller: 'LoginCtrl'
     })
 
+    .state('forgot-password', {
+        url: '/forgot-password',
+        templateUrl: 'templates/forgot-password.html',
+        controller: 'ForgotPasswordCtrl'
+    })
+
+    .state('app.view-profile', {
+        url: '/view-profile',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/view-profile.html',
+                controller: 'ViewProfileController'
+            }
+        }
+    })
+
+    .state('app.change-password', {
+        url: '/change-password',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/change-password.html',
+                controller: 'ChangePasswordController'
+            }
+        }
+    })
+
+    .state('app.change-email', {
+        url: '/change-email',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/change-email.html',
+                controller: 'ChangeEmailController'
+            }
+        }
+    })
+
+
     .state('signup', {
         url: '/signup',
         templateUrl: 'templates/sign-up.html',
